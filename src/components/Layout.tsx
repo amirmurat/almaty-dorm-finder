@@ -1,15 +1,29 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Bug } from "lucide-react";
 import { Navbar } from "./Navbar";
 import { Footer } from "./Footer";
 import { MyRequestsModal } from "./MyRequestsModal";
 import { DebugModal } from "./DebugModal";
+import { OnboardingModal } from "./OnboardingModal";
 import { Button } from "./ui/button";
+import { shouldShowOnboarding } from "@/lib/storage";
 
 export function Layout() {
   const [myRequestsOpen, setMyRequestsOpen] = useState(false);
   const [debugOpen, setDebugOpen] = useState(false);
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
+
+  useEffect(() => {
+    // Show onboarding after 400ms if needed
+    const timer = setTimeout(() => {
+      if (shouldShowOnboarding()) {
+        setOnboardingOpen(true);
+      }
+    }, 400);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -29,6 +43,11 @@ export function Layout() {
       <DebugModal
         open={debugOpen}
         onClose={() => setDebugOpen(false)}
+      />
+
+      <OnboardingModal
+        open={onboardingOpen}
+        onClose={() => setOnboardingOpen(false)}
       />
 
       {/* Debug Button */}

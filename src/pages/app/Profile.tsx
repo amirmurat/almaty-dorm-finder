@@ -17,7 +17,8 @@ import { getDormRequests, DormRequest, deleteDormRequest } from "@/lib/storage";
 import { deleteUser } from "@/lib/auth";
 import { track } from "@/lib/tracking";
 import { toast } from "sonner";
-import { User, LogOut, Trash2, Mail, Phone } from "lucide-react";
+import { User, LogOut, Trash2, Mail, Phone, Edit } from "lucide-react";
+import { OnboardingModal } from "@/components/OnboardingModal";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -25,6 +26,7 @@ export default function Profile() {
   const [requests, setRequests] = useState<DormRequest[]>([]);
   const [deleteAccountOpen, setDeleteAccountOpen] = useState(false);
   const [deleteRequestId, setDeleteRequestId] = useState<string | null>(null);
+  const [onboardingOpen, setOnboardingOpen] = useState(false);
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -118,6 +120,20 @@ export default function Profile() {
               </Button>
             </div>
           </div>
+        </div>
+
+        {/* Onboarding Settings */}
+        <div className="bg-card border border-border rounded-lg p-6 mb-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-bold">Настройки поиска</h2>
+            <Button onClick={() => setOnboardingOpen(true)} variant="outline" size="sm">
+              <Edit className="mr-2 h-4 w-4" />
+              Изменить ответы опроса
+            </Button>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Измените ваши предпочтения для более точного поиска общежитий
+          </p>
         </div>
 
         {/* My Requests */}
@@ -245,6 +261,13 @@ export default function Profile() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Onboarding Modal */}
+      <OnboardingModal
+        open={onboardingOpen}
+        onClose={() => setOnboardingOpen(false)}
+        isEdit={true}
+      />
     </div>
   );
 }

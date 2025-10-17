@@ -104,3 +104,92 @@ export function getDemoPaymentByRequestId(requestId: string): DemoPayment | unde
   const payments = getDemoPayments();
   return payments.find(p => p.requestId === requestId);
 }
+
+export interface OnboardingProfile {
+  role: string;
+  roleOther?: string;
+  university: string;
+  liveNow: boolean;
+  moveIn: string;
+  budgetMin: number;
+  budgetMax: number;
+  genderPolicy: string;
+  roomType: string;
+  transparencyScore: number;
+  depositWilling: string;
+  source: string;
+  utm?: {
+    source?: string;
+    medium?: string;
+    campaign?: string;
+    content?: string;
+  };
+  contact?: string;
+  timestamp: string;
+}
+
+export interface OnboardingStatus {
+  status: "submitted" | "skipped";
+  nextAt?: string; // ISO date when to show again
+}
+
+const ONBOARDING_PROFILE_KEY = "onboardingProfile";
+const ONBOARDING_STATUS_KEY = "onboardingStatus";
+
+export function saveOnboardingProfile(profile: Omit<OnboardingProfile, "timestamp">): OnboardingProfile {
+  const newProfile: OnboardingProfile = {
+    ...profile,
+    timestamp: new Date().toISOString()
+  };
+  
+  try {
+    localStorage.setItem(ONBOARDING_PROFILE_KEY, JSON.stringify(newProfile));
+    return newProfile;
+  } catch (error) {
+    console.error("Failed to save onboarding profile:", error);
+    throw error;
+  }
+}
+
+export function getOnboardingProfile(): OnboardingProfile | null {
+  try {
+    const existing = localStorage.getItem(ONBOARDING_PROFILE_KEY);
+    return existing ? JSON.parse(existing) : null;
+  } catch (error) {
+    console.error("Failed to read onboarding profile:", error);
+    return null;
+  }
+}
+
+export function saveOnboardingStatus(status: OnboardingStatus): void {
+  try {
+    localStorage.setItem(ONBOARDING_STATUS_KEY, JSON.stringify(status));
+  } catch (error) {
+    console.error("Failed to save onboarding status:", error);
+  }
+}
+
+export function getOnboardingStatus(): OnboardingStatus | null {
+  try {
+    const existing = localStorage.getItem(ONBOARDING_STATUS_KEY);
+    return existing ? JSON.parse(existing) : null;
+  } catch (error) {
+    console.error("Failed to read onboarding status:", error);
+    return null;
+  }
+}
+
+export function shouldShowOnboarding(): boolean {
+  const status = getOnboardingStatus();
+  
+  if (!status) return true; // First time visitor
+  
+  if (status.status === "submitted") return false; // Already submitted
+  
+  if (status.status === "skipped" && status.nextAt) {
+    const nextDate = new Date(status.nextAt);
+    return new Date() >= nextDate; // Show again if 30 days passed
+  }
+  
+  return true;
+}

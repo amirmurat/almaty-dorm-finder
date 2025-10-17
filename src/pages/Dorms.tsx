@@ -43,6 +43,25 @@ export default function Dorms() {
 
   const universities = Array.from(new Set(dorms.map(d => d.university)));
 
+  // Apply filters from URL params (from onboarding)
+  useEffect(() => {
+    const university = searchParams.get("university");
+    const priceMin = searchParams.get("priceMin");
+    const priceMax = searchParams.get("priceMax");
+    const gender = searchParams.get("gender");
+    const room = searchParams.get("roomType");
+
+    if (university && universities.includes(university)) {
+      setSelectedUniversities([university]);
+    }
+    if (priceMin && priceMax) {
+      setPriceRange([parseInt(priceMin), parseInt(priceMax)]);
+    }
+    if (gender && gender !== "any") {
+      setGenderPolicy(gender);
+    }
+  }, []);
+
   useEffect(() => {
     track("view_search", {});
   }, []);
