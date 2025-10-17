@@ -150,9 +150,9 @@ export default function Dorms() {
     <div className="container mx-auto px-4 py-8">
       <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl md:text-4xl font-bold mb-2">Search Dorms</h1>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Поиск общежитий</h1>
           <p className="text-muted-foreground">
-            Found {filteredAndSortedDorms.length} dorm{filteredAndSortedDorms.length !== 1 ? "s" : ""}
+            Найдено {filteredAndSortedDorms.length} общежити{filteredAndSortedDorms.length === 1 ? "е" : filteredAndSortedDorms.length < 5 ? "я" : "й"}
           </p>
         </div>
         
@@ -160,11 +160,11 @@ export default function Dorms() {
           <TabsList>
             <TabsTrigger value="list" className="gap-2">
               <List className="h-4 w-4" />
-              List
+              Список
             </TabsTrigger>
             <TabsTrigger value="map" className="gap-2">
               <MapIcon className="h-4 w-4" />
-              Map
+              Карта
             </TabsTrigger>
           </TabsList>
         </Tabs>
@@ -177,17 +177,17 @@ export default function Dorms() {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-semibold flex items-center gap-2">
                 <SlidersHorizontal size={20} />
-                Filters
+                Фильтры
               </h2>
               <Button variant="ghost" size="sm" onClick={handleReset}>
-                Reset
+                Сбросить
               </Button>
             </div>
 
             <div className="space-y-6">
               {/* Universities */}
               <div>
-                <Label className="mb-3 block">University</Label>
+                <Label className="mb-3 block">Университет</Label>
                 <div className="space-y-2">
                   {universities.map(uni => (
                     <div key={uni} className="flex items-center space-x-2">
@@ -207,7 +207,7 @@ export default function Dorms() {
               {/* Price Range */}
               <div>
                 <Label className="mb-3 block">
-                  Price Range: {priceRange[0].toLocaleString()} - {priceRange[1].toLocaleString()} ₸
+                  Цена: {priceRange[0].toLocaleString()} - {priceRange[1].toLocaleString()} ₸
                 </Label>
                 <Slider
                   min={0}
@@ -221,20 +221,25 @@ export default function Dorms() {
 
               {/* Gender Policy */}
               <div>
-                <Label className="mb-3 block">Gender Policy</Label>
+                <Label className="mb-3 block">Гендерная политика</Label>
                 <div className="space-y-2">
-                  {["all", "male", "female", "mixed"].map(policy => (
-                    <div key={policy} className="flex items-center space-x-2">
+                  {[
+                    { value: "all", label: "Все" },
+                    { value: "male", label: "Мужские" },
+                    { value: "female", label: "Женские" },
+                    { value: "mixed", label: "Смешанные" }
+                  ].map(policy => (
+                    <div key={policy.value} className="flex items-center space-x-2">
                       <input
                         type="radio"
-                        id={policy}
+                        id={policy.value}
                         name="gender"
-                        checked={genderPolicy === policy}
-                        onChange={() => setGenderPolicy(policy)}
+                        checked={genderPolicy === policy.value}
+                        onChange={() => setGenderPolicy(policy.value)}
                         className="cursor-pointer"
                       />
-                      <label htmlFor={policy} className="text-sm cursor-pointer capitalize">
-                        {policy === "all" ? "All" : policy}
+                      <label htmlFor={policy.value} className="text-sm cursor-pointer">
+                        {policy.label}
                       </label>
                     </div>
                   ))}
@@ -244,7 +249,7 @@ export default function Dorms() {
               {/* Distance */}
               <div>
                 <Label className="mb-3 block">
-                  Max Distance: {maxDistance} km
+                  Макс. расстояние: {maxDistance} км
                 </Label>
                 <Slider
                   min={1}
@@ -263,21 +268,21 @@ export default function Dorms() {
                   onCheckedChange={(checked) => setVerifiedOnly(checked as boolean)}
                 />
                 <label htmlFor="verified" className="text-sm cursor-pointer">
-                  Verified only
+                  Только проверенные
                 </label>
               </div>
 
               {/* Sort */}
               <div>
-                <Label htmlFor="sort" className="mb-3 block">Sort By</Label>
+                <Label htmlFor="sort" className="mb-3 block">Сортировка</Label>
                 <Select value={sortBy} onValueChange={setSortBy}>
                   <SelectTrigger id="sort">
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="price-asc">Price: Low to High</SelectItem>
-                    <SelectItem value="price-desc">Price: High to Low</SelectItem>
-                    <SelectItem value="distance-asc">Distance: Near to Far</SelectItem>
+                    <SelectItem value="price-asc">Цена: по возрастанию</SelectItem>
+                    <SelectItem value="price-desc">Цена: по убыванию</SelectItem>
+                    <SelectItem value="distance-asc">Расстояние: ближайшие</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -294,7 +299,7 @@ export default function Dorms() {
               className="w-full"
             >
               <SlidersHorizontal size={16} className="mr-2" />
-              {filtersVisible ? "Hide" : "Show"} Filters
+              {filtersVisible ? "Скрыть" : "Показать"} фильтры
             </Button>
           </div>
 
@@ -302,12 +307,12 @@ export default function Dorms() {
             paginatedDorms.length === 0 ? (
               <div className="text-center py-16">
                 <p className="text-xl text-muted-foreground mb-4">
-                  No dorms match your filters.
+                  Нет общежитий, соответствующих вашим фильтрам.
                 </p>
                 <p className="text-muted-foreground mb-6">
-                  Try widening the price or distance.
+                  Попробуйте расширить диапазон цены или расстояния.
                 </p>
-                <Button onClick={handleReset}>Reset Filters</Button>
+                <Button onClick={handleReset}>Сбросить фильтры</Button>
               </div>
             ) : (
               <>
@@ -330,17 +335,17 @@ export default function Dorms() {
                       onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                       disabled={currentPage === 1}
                     >
-                      Previous
+                      Назад
                     </Button>
                     <div className="flex items-center px-4">
-                      Page {currentPage} of {totalPages}
+                      Страница {currentPage} из {totalPages}
                     </div>
                     <Button
                       variant="outline"
                       onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                       disabled={currentPage === totalPages}
                     >
-                      Next
+                      Вперед
                     </Button>
                   </div>
                 )}
@@ -359,10 +364,10 @@ export default function Dorms() {
               {filteredAndSortedDorms.length === 0 && (
                 <div className="text-center py-8">
                   <p className="text-muted-foreground">
-                    No dorms match your filters.
+                    Нет общежитий, соответствующих вашим фильтрам.
                   </p>
                   <Button onClick={handleReset} variant="outline" className="mt-4">
-                    Reset Filters
+                    Сбросить фильтры
                   </Button>
                 </div>
               )}

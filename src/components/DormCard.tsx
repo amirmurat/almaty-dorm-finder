@@ -22,7 +22,7 @@ export function DormCard({ dorm, onRequestClick }: DormCardProps) {
         {dorm.verified && (
           <div className="absolute top-2 right-2 bg-success text-success-foreground px-2 py-1 rounded-md flex items-center gap-1 text-xs font-medium">
             <CheckCircle2 size={14} />
-            Verified
+            Проверено
           </div>
         )}
       </div>
@@ -35,13 +35,13 @@ export function DormCard({ dorm, onRequestClick }: DormCardProps) {
           </div>
           <div className="text-right ml-2">
             <div className="font-bold text-lg text-primary">{dorm.priceKzt.toLocaleString()} ₸</div>
-            <div className="text-xs text-muted-foreground">per month</div>
+            <div className="text-xs text-muted-foreground">в месяц</div>
           </div>
         </div>
         
         <div className="flex items-center text-sm text-muted-foreground mb-3">
           <MapPin size={14} className="mr-1" />
-          {dorm.distanceKm} km from center
+          {dorm.distanceKm} км от центра
         </div>
         
         <div className="flex flex-wrap gap-1 mb-3">
@@ -60,7 +60,7 @@ export function DormCard({ dorm, onRequestClick }: DormCardProps) {
         <div className="flex gap-2">
           <Link to={`/dorms/${dorm.id}`} className="flex-1">
             <Button variant="outline" size="sm" className="w-full">
-              View details
+              Подробнее
             </Button>
           </Link>
           <Button 
@@ -68,7 +68,7 @@ export function DormCard({ dorm, onRequestClick }: DormCardProps) {
             size="sm" 
             className="flex-1"
           >
-            Request
+            Оставить заявку
           </Button>
         </div>
       </div>

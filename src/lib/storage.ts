@@ -11,6 +11,7 @@ export interface DormRequest {
   moveInMonth: string;
   timestamp: string;
   demoPaymentId?: string;
+  userId?: string;
 }
 
 export interface DemoPayment {

@@ -13,7 +13,12 @@ export function track(eventName: string, payload: Record<string, unknown> = {}) 
     payload
   };
   
-  console.log("📊 Event:", eventName, payload);
+  // Don't log sensitive data
+  const sanitizedPayload = { ...payload };
+  if ('password' in sanitizedPayload) delete sanitizedPayload.password;
+  if ('passwordHash' in sanitizedPayload) delete sanitizedPayload.passwordHash;
+  
+  console.log("📊 Event:", eventName, sanitizedPayload);
   
   try {
     const existing = localStorage.getItem(EVENT_LOG_KEY);

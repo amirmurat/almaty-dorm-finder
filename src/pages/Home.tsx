@@ -49,12 +49,12 @@ export default function Home() {
     e.preventDefault();
     
     if (!contactForm.name || !contactForm.email || !contactForm.message) {
-      toast.error("Please fill in all fields");
+      toast.error("Пожалуйста, заполните все поля");
       return;
     }
 
     track("contact_submit", contactForm);
-    toast.success("Message sent! We'll get back to you soon.");
+    toast.success("Сообщение отправлено! Мы свяжемся с вами в ближайшее время.");
     setContactForm({ name: "", email: "", message: "" });
   };
 
@@ -66,14 +66,14 @@ export default function Home() {
       <section id="hero" className="py-20 md:py-32 px-4">
         <div className="container mx-auto text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 text-primary">
-            Find and book verified student dorms in Almaty
+            Найдите и забронируйте проверенные общежития в Алматы
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
-            Transparent prices, amenities, and availability — all in one place.
+            Прозрачные цены, удобства и доступность — всё в одном месте.
           </p>
           <Button size="lg" onClick={handleSearchClick} className="text-lg px-8">
             <Search className="mr-2" size={20} />
-            Search dorms
+            Искать общежития
           </Button>
         </div>
       </section>
@@ -81,7 +81,7 @@ export default function Home() {
       {/* How It Works Section */}
       <section id="how" className="py-16 bg-muted/30 px-4">
         <div className="container mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">How it works</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Как это работает</h2>
           
           <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div className="text-center">
@@ -91,9 +91,9 @@ export default function Home() {
               <div className="flex justify-center mb-3">
                 <Search size={40} className="text-primary" />
               </div>
-              <h3 className="font-semibold text-lg mb-2">Search & Filter</h3>
+              <h3 className="font-semibold text-lg mb-2">Поиск и фильтры</h3>
               <p className="text-muted-foreground text-sm">
-                Browse verified dorms by university, price, and amenities
+                Просматривайте проверенные общежития по университету, цене и удобствам
               </p>
             </div>
 
@@ -104,9 +104,9 @@ export default function Home() {
               <div className="flex justify-center mb-3">
                 <Building2 size={40} className="text-primary" />
               </div>
-              <h3 className="font-semibold text-lg mb-2">Compare Options</h3>
+              <h3 className="font-semibold text-lg mb-2">Сравнение вариантов</h3>
               <p className="text-muted-foreground text-sm">
-                View detailed info, photos, and reviews for each dorm
+                Изучайте детальную информацию, фото и отзывы по каждому общежитию
               </p>
             </div>
 
@@ -117,9 +117,9 @@ export default function Home() {
               <div className="flex justify-center mb-3">
                 <CheckCircle2 size={40} className="text-primary" />
               </div>
-              <h3 className="font-semibold text-lg mb-2">Request a Spot</h3>
+              <h3 className="font-semibold text-lg mb-2">Отправка заявки</h3>
               <p className="text-muted-foreground text-sm">
-                Submit your request and we'll connect you with the dorm
+                Подайте заявку, и мы свяжем вас с общежитием
               </p>
             </div>
           </div>
@@ -130,8 +130,8 @@ export default function Home() {
       <section id="search" className="py-16 px-4">
         <div className="container mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Featured Dorms</h2>
-            <p className="text-muted-foreground">Explore verified student accommodations</p>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Рекомендуемые общежития</h2>
+            <p className="text-muted-foreground">Проверенные варианты студенческого жилья</p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
@@ -146,7 +146,7 @@ export default function Home() {
 
           <div className="text-center">
             <Button size="lg" onClick={handleViewAllDorms}>
-              View all dorms & filters
+              Смотреть все общежития и фильтры
             </Button>
           </div>
         </div>
@@ -155,38 +155,38 @@ export default function Home() {
       {/* Featured Section */}
       <section id="featured" className="py-16 bg-muted/30 px-4">
         <div className="container mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Why Choose DormEase?</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Почему DormEase?</h2>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto">
             <div className="bg-card p-6 rounded-lg border border-border text-center">
               <CheckCircle2 className="text-success mx-auto mb-3" size={40} />
-              <h3 className="font-semibold mb-2">Verified Listings</h3>
+              <h3 className="font-semibold mb-2">Проверенные объявления</h3>
               <p className="text-sm text-muted-foreground">
-                All dorms are verified for accuracy
+                Все общежития проверены на достоверность
               </p>
             </div>
 
             <div className="bg-card p-6 rounded-lg border border-border text-center">
               <Search className="text-primary mx-auto mb-3" size={40} />
-              <h3 className="font-semibold mb-2">Smart Search</h3>
+              <h3 className="font-semibold mb-2">Умный поиск</h3>
               <p className="text-sm text-muted-foreground">
-                Filter by price, location, amenities
+                Фильтры по цене, местоположению, удобствам
               </p>
             </div>
 
             <div className="bg-card p-6 rounded-lg border border-border text-center">
               <Clock className="text-secondary mx-auto mb-3" size={40} />
-              <h3 className="font-semibold mb-2">Save Time</h3>
+              <h3 className="font-semibold mb-2">Экономия времени</h3>
               <p className="text-sm text-muted-foreground">
-                Compare all options in one place
+                Сравнивайте все варианты в одном месте
               </p>
             </div>
 
             <div className="bg-card p-6 rounded-lg border border-border text-center">
               <Building2 className="text-accent mx-auto mb-3" size={40} />
-              <h3 className="font-semibold mb-2">Wide Selection</h3>
+              <h3 className="font-semibold mb-2">Широкий выбор</h3>
               <p className="text-sm text-muted-foreground">
-                Dorms near all major universities
+                Общежития возле всех крупных университетов
               </p>
             </div>
           </div>
@@ -196,41 +196,41 @@ export default function Home() {
       {/* FAQ Section */}
       <section id="faq" className="py-16 px-4">
         <div className="container mx-auto max-w-3xl">
-          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Frequently Asked Questions</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-center mb-12">Часто задаваемые вопросы</h2>
           
           <Accordion type="single" collapsible className="space-y-4">
             <AccordionItem value="item-1" className="border border-border rounded-lg px-4">
-              <AccordionTrigger>How do I book a dorm?</AccordionTrigger>
+              <AccordionTrigger>Как забронировать общежитие?</AccordionTrigger>
               <AccordionContent>
-                Browse available dorms, click "Request" on your preferred option, fill out the form with your details, and submit. We'll connect you with the dorm management.
+                Просмотрите доступные общежития, нажмите «Оставить заявку» на понравившемся варианте, заполните форму своими данными и отправьте. Мы свяжем вас с администрацией общежития.
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-2" className="border border-border rounded-lg px-4">
-              <AccordionTrigger>Are all listings verified?</AccordionTrigger>
+              <AccordionTrigger>Все ли объявления проверены?</AccordionTrigger>
               <AccordionContent>
-                Dorms marked with a "Verified" badge have been checked by our team. We're constantly working to verify all listings on the platform.
+                Общежития с бейджем «Проверено» проверены нашей командой. Мы постоянно работаем над проверкой всех объявлений на платформе.
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-3" className="border border-border rounded-lg px-4">
-              <AccordionTrigger>What payment methods are accepted?</AccordionTrigger>
+              <AccordionTrigger>Какие способы оплаты принимаются?</AccordionTrigger>
               <AccordionContent>
-                Payment terms vary by dorm. After submitting a request, the dorm management will contact you with specific payment information and options.
+                Условия оплаты различаются в зависимости от общежития. После подачи заявки администрация общежития свяжется с вами и сообщит конкретную информацию об оплате и доступных способах.
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-4" className="border border-border rounded-lg px-4">
-              <AccordionTrigger>Can I visit the dorm before booking?</AccordionTrigger>
+              <AccordionTrigger>Можно ли посетить общежитие перед бронированием?</AccordionTrigger>
               <AccordionContent>
-                Yes! We recommend visiting dorms in person. After submitting a request, you can arrange a visit with the dorm management.
+                Да! Мы рекомендуем лично посетить общежитие. После подачи заявки вы сможете договориться о визите с администрацией общежития.
               </AccordionContent>
             </AccordionItem>
 
             <AccordionItem value="item-5" className="border border-border rounded-lg px-4">
-              <AccordionTrigger>Is this a real booking platform?</AccordionTrigger>
+              <AccordionTrigger>Это настоящая платформа для бронирования?</AccordionTrigger>
               <AccordionContent>
-                This is a prototype demonstration with no backend. All data is stored locally in your browser. In a production version, requests would be sent to dorm managers.
+                Это демонстрационный прототип без бэкенда. Все данные хранятся локально в вашем браузере. В производственной версии заявки будут отправляться администрации общежитий.
               </AccordionContent>
             </AccordionItem>
           </Accordion>
@@ -242,20 +242,20 @@ export default function Home() {
         <div className="container mx-auto max-w-2xl">
           <div className="text-center mb-8">
             <Mail className="text-primary mx-auto mb-4" size={48} />
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Get in Touch</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Свяжитесь с нами</h2>
             <p className="text-muted-foreground">
-              Have questions? We're here to help!
+              Есть вопросы? Мы здесь, чтобы помочь!
             </p>
           </div>
 
           <form onSubmit={handleContactSubmit} className="bg-card p-6 md:p-8 rounded-lg border border-border space-y-4">
             <div>
-              <Label htmlFor="contact-name">Name</Label>
+              <Label htmlFor="contact-name">Имя</Label>
               <Input
                 id="contact-name"
                 value={contactForm.name}
                 onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                placeholder="Your name"
+                placeholder="Ваше имя"
               />
             </div>
 
@@ -271,18 +271,18 @@ export default function Home() {
             </div>
 
             <div>
-              <Label htmlFor="contact-message">Message</Label>
+              <Label htmlFor="contact-message">Сообщение</Label>
               <Textarea
                 id="contact-message"
                 value={contactForm.message}
                 onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                placeholder="How can we help you?"
+                placeholder="Как мы можем вам помочь?"
                 rows={5}
               />
             </div>
 
             <Button type="submit" className="w-full">
-              Send Message
+              Отправить сообщение
             </Button>
           </form>
         </div>

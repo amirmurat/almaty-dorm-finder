@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface NavbarProps {
   onMyRequestsClick: () => void;
@@ -11,6 +12,7 @@ export function Navbar({ onMyRequestsClick }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, logout } = useAuth();
 
   const scrollToSection = (sectionId: string) => {
     if (location.pathname !== "/") {
@@ -40,25 +42,25 @@ export function Navbar({ onMyRequestsClick }: NavbarProps) {
               onClick={() => scrollToSection("hero")}
               className="text-foreground hover:text-primary transition-colors"
             >
-              Home
+              Главная
             </button>
             <button
               onClick={() => scrollToSection("how")}
               className="text-foreground hover:text-primary transition-colors"
             >
-              How it works
+              Как это работает
             </button>
             <button
               onClick={() => scrollToSection("search")}
               className="text-foreground hover:text-primary transition-colors"
             >
-              Search
+              Поиск
             </button>
             <Link
               to="/dorms?view=map"
               className="text-foreground hover:text-primary transition-colors"
             >
-              Map
+              Карта
             </Link>
             <button
               onClick={() => scrollToSection("faq")}
@@ -70,11 +72,32 @@ export function Navbar({ onMyRequestsClick }: NavbarProps) {
               onClick={() => scrollToSection("contact")}
               className="text-foreground hover:text-primary transition-colors"
             >
-              Contact
+              Контакты
             </button>
             <Button onClick={onMyRequestsClick} variant="outline" size="sm">
-              My Requests
+              Мои заявки
             </Button>
+            
+            {isAuthenticated ? (
+              <>
+                <Button onClick={() => navigate("/app/profile")} variant="outline" size="sm">
+                  <User className="mr-2 h-4 w-4" />
+                  Профиль
+                </Button>
+                <Button onClick={logout} variant="ghost" size="sm">
+                  Выйти
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button onClick={() => navigate("/auth/login")} variant="ghost" size="sm">
+                  Войти
+                </Button>
+                <Button onClick={() => navigate("/auth/register")} variant="default" size="sm">
+                  Регистрация
+                </Button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -87,33 +110,33 @@ export function Navbar({ onMyRequestsClick }: NavbarProps) {
           </button>
         </div>
 
-        {/* Mobile Navigation */}
+          {/* Mobile Navigation */}
         {mobileMenuOpen && (
           <div className="md:hidden py-4 space-y-3 border-t border-border">
             <button
               onClick={() => scrollToSection("hero")}
               className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"
             >
-              Home
+              Главная
             </button>
             <button
               onClick={() => scrollToSection("how")}
               className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"
             >
-              How it works
+              Как это работает
             </button>
             <button
               onClick={() => scrollToSection("search")}
               className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"
             >
-              Search
+              Поиск
             </button>
             <Link
               to="/dorms?view=map"
               className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"
               onClick={() => setMobileMenuOpen(false)}
             >
-              Map
+              Карта
             </Link>
             <button
               onClick={() => scrollToSection("faq")}
@@ -125,11 +148,32 @@ export function Navbar({ onMyRequestsClick }: NavbarProps) {
               onClick={() => scrollToSection("contact")}
               className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"
             >
-              Contact
+              Контакты
             </button>
             <Button onClick={onMyRequestsClick} variant="outline" size="sm" className="w-full">
-              My Requests
+              Мои заявки
             </Button>
+            
+            {isAuthenticated ? (
+              <>
+                <Button onClick={() => { navigate("/app/profile"); setMobileMenuOpen(false); }} variant="outline" size="sm" className="w-full">
+                  <User className="mr-2 h-4 w-4" />
+                  Профиль
+                </Button>
+                <Button onClick={() => { logout(); setMobileMenuOpen(false); }} variant="ghost" size="sm" className="w-full">
+                  Выйти
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button onClick={() => { navigate("/auth/login"); setMobileMenuOpen(false); }} variant="ghost" size="sm" className="w-full">
+                  Войти
+                </Button>
+                <Button onClick={() => { navigate("/auth/register"); setMobileMenuOpen(false); }} variant="default" size="sm" className="w-full">
+                  Регистрация
+                </Button>
+              </>
+            )}
           </div>
         )}
       </div>

@@ -22,26 +22,26 @@ export function Footer() {
       <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="font-bold text-lg mb-3">DormFinder</h3>
+            <h3 className="font-bold text-lg mb-3">DormEase</h3>
             <p className="text-muted-foreground text-sm">
-              Find and book verified student dorms in Almaty
+              Найдите и забронируйте проверенные общежития в Алматы
             </p>
           </div>
           
           <div>
-            <h4 className="font-semibold mb-3">Quick Links</h4>
+            <h4 className="font-semibold mb-3">Быстрые ссылки</h4>
             <div className="space-y-2 text-sm">
               <button
                 onClick={() => scrollToSection("how")}
                 className="block text-muted-foreground hover:text-primary transition-colors"
               >
-                How it works
+                Как это работает
               </button>
               <button
                 onClick={() => scrollToSection("search")}
                 className="block text-muted-foreground hover:text-primary transition-colors"
               >
-                Search dorms
+                Искать общежития
               </button>
               <button
                 onClick={() => scrollToSection("faq")}
@@ -53,18 +53,18 @@ export function Footer() {
           </div>
           
           <div>
-            <h4 className="font-semibold mb-3">Contact</h4>
+            <h4 className="font-semibold mb-3">Контакты</h4>
             <button
               onClick={() => scrollToSection("contact")}
               className="text-sm text-muted-foreground hover:text-primary transition-colors"
             >
-              Get in touch
+              Связаться с нами
             </button>
           </div>
         </div>
         
         <div className="mt-8 pt-6 border-t border-border text-center text-sm text-muted-foreground">
-          <p>Prototype (no backend) - © 2025 DormFinder</p>
+          <p>Прототип (без бэкенда) - © 2025 DormEase</p>
         </div>
       </div>
     </footer>
