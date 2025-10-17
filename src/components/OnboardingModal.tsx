@@ -74,15 +74,20 @@ export function OnboardingModal({ open, onClose, isEdit = false }: OnboardingMod
   useEffect(() => {
     if (open) {
       const urlParams = new URLSearchParams(window.location.search);
+      const utmSource = urlParams.get("utm_source");
+      const utmMedium = urlParams.get("utm_medium");
+      const utmCampaign = urlParams.get("utm_campaign");
+      const utmContent = urlParams.get("utm_content");
+      
       const utm = {
-        source: urlParams.get("utm_source") || undefined,
-        medium: urlParams.get("utm_medium") || undefined,
-        campaign: urlParams.get("utm_campaign") || undefined,
-        content: urlParams.get("utm_content") || undefined
+        source: utmSource || undefined,
+        medium: utmMedium || undefined,
+        campaign: utmCampaign || undefined,
+        content: utmContent || undefined
       };
       
       track(isEdit ? "onboarding_edit_open" : "onboarding_open", { 
-        utm,
+        utm: (utmSource || utmMedium || utmCampaign || utmContent) ? utm : undefined,
         referrer: document.referrer 
       });
     }
@@ -135,11 +140,16 @@ export function OnboardingModal({ open, onClose, isEdit = false }: OnboardingMod
     }
 
     const urlParams = new URLSearchParams(window.location.search);
+    const utmSource = urlParams.get("utm_source");
+    const utmMedium = urlParams.get("utm_medium");
+    const utmCampaign = urlParams.get("utm_campaign");
+    const utmContent = urlParams.get("utm_content");
+    
     const utm = {
-      source: urlParams.get("utm_source") || undefined,
-      medium: urlParams.get("utm_medium") || undefined,
-      campaign: urlParams.get("utm_campaign") || undefined,
-      content: urlParams.get("utm_content") || undefined
+      source: utmSource || undefined,
+      medium: utmMedium || undefined,
+      campaign: utmCampaign || undefined,
+      content: utmContent || undefined
     };
 
     const profile: Omit<OnboardingProfile, "timestamp"> = {
