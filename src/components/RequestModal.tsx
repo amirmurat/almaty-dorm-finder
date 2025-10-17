@@ -17,8 +17,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { DemoCheckout } from "@/components/DemoCheckout";
 import { Dorm } from "@/data/dorms";
-import { saveDormRequest } from "@/lib/storage";
+import { saveDormRequest, DemoPayment } from "@/lib/storage";
 import { track } from "@/lib/tracking";
 import { toast } from "sonner";
 
@@ -31,6 +32,7 @@ interface RequestModalProps {
 export function RequestModal({ dorm, open, onClose }: RequestModalProps) {
   const [step, setStep] = useState<"form" | "success">("form");
   const [requestId, setRequestId] = useState("");
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   
   const [formData, setFormData] = useState({
     fullName: "",
@@ -59,7 +61,19 @@ export function RequestModal({ dorm, open, onClose }: RequestModalProps) {
     });
     setErrors({});
     setRequestId("");
+    setCheckoutOpen(false);
     onClose();
+  };
+
+  const handlePaymentSuccess = (payment: DemoPayment) => {
+    setCheckoutOpen(false);
+    toast.success("Demo payment successful!");
+  };
+
+  const handleProceedToPayment = () => {
+    if (!dorm || !requestId) return;
+    track("start_checkout_demo", { dormId: dorm.id, requestId });
+    setCheckoutOpen(true);
   };
 
   const validate = () => {
@@ -293,12 +307,27 @@ export function RequestModal({ dorm, open, onClose }: RequestModalProps) {
             <p className="text-sm text-muted-foreground mb-6">
               We'll contact you by {formData.contactType === "email" ? "email" : "Telegram"}
             </p>
-            <Button onClick={handleClose}>
-              Close
-            </Button>
+            <div className="flex flex-col gap-2">
+              <Button onClick={handleProceedToPayment} className="w-full">
+                Proceed to payment (demo)
+              </Button>
+              <Button onClick={handleClose} variant="outline" className="w-full">
+                Close
+              </Button>
+            </div>
           </div>
         )}
       </DialogContent>
+
+      {dorm && (
+        <DemoCheckout
+          open={checkoutOpen}
+          onClose={() => setCheckoutOpen(false)}
+          dorm={dorm}
+          requestId={requestId}
+          onSuccess={handlePaymentSuccess}
+        />
+      )}
     </Dialog>
   );
 }

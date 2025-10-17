@@ -31,7 +31,7 @@ export function Navbar({ onMyRequestsClick }: NavbarProps) {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <Link to="/" className="text-xl font-bold text-primary">
-            DormFinder
+            DormEase
           </Link>
 
           {/* Desktop Navigation */}
@@ -54,6 +54,12 @@ export function Navbar({ onMyRequestsClick }: NavbarProps) {
             >
               Search
             </button>
+            <Link
+              to="/dorms?view=map"
+              className="text-foreground hover:text-primary transition-colors"
+            >
+              Map
+            </Link>
             <button
               onClick={() => scrollToSection("faq")}
               className="text-foreground hover:text-primary transition-colors"
@@ -102,6 +108,13 @@ export function Navbar({ onMyRequestsClick }: NavbarProps) {
             >
               Search
             </button>
+            <Link
+              to="/dorms?view=map"
+              className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Map
+            </Link>
             <button
               onClick={() => scrollToSection("faq")}
               className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"

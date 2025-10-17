@@ -1,8 +1,56 @@
-# Welcome to your Lovable project
+# DormEase - Student Dormitory Booking Platform
+
+Front-end only MVP with map view and demo payment system.
 
 ## Project info
 
 **URL**: https://lovable.dev/projects/c05fbddd-f6de-422d-9d14-fcc95fe178fb
+
+## Features
+
+- Search and filter dorms by university, price, distance, gender policy
+- Interactive static map view with pan/zoom controls
+- Demo payment checkout (no real transactions)
+- Request submission and tracking
+- Fully responsive design
+
+## Data Structure
+
+### Dorm Locations
+All dorms include `mapX`, `mapY` coordinates (0-1024 range) for static map positioning and `geo` coordinates for future integration.
+
+### LocalStorage Keys
+- `dormRequests` - User submitted requests
+- `eventLog` - Analytics events
+- `demoPayments` - Demo payment records (no card data stored)
+
+## How to Reset State
+
+Clear browser localStorage:
+```javascript
+localStorage.removeItem('dormRequests');
+localStorage.removeItem('eventLog');
+localStorage.removeItem('demoPayments');
+```
+
+## Tracked Events
+
+Map: `toggle_map_list`, `open_map`, `map_pan`, `map_zoom`, `map_marker_click`, `map_open_request`, `map_view_details`
+
+Payment: `start_checkout_demo`, `submit_checkout_demo`, `mock_pay_success`, `mock_pay_decline`, `view_demo_receipt`
+
+## Accessibility
+
+- Keyboard navigation: Tab cycles through markers, Enter/Space activates
+- All interactive elements have aria-labels
+- Focus visible on all controls
+
+## Demo Limitations
+
+- Static basemap (no live tiles)
+- No real payment processing
+- Card details immediately discarded (never stored)
+- All data stored locally in browser
 
 ## How can I edit this code?
 

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,16 +12,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { DormCard } from "@/components/DormCard";
 import { RequestModal } from "@/components/RequestModal";
+import { StaticMap } from "@/components/StaticMap";
 import { dorms, Dorm } from "@/data/dorms";
 import { track } from "@/lib/tracking";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, List, Map as MapIcon } from "lucide-react";
 
 export default function Dorms() {
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const [selectedDorm, setSelectedDorm] = useState<Dorm | null>(null);
   const [requestModalOpen, setRequestModalOpen] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(true);
+  const [highlightedDormId, setHighlightedDormId] = useState<string | undefined>();
+  
+  const viewMode = searchParams.get("view") === "map" ? "map" : "list";
 
   // Filter states
   const [selectedUniversities, setSelectedUniversities] = useState<string[]>([]);
@@ -38,6 +46,24 @@ export default function Dorms() {
   useEffect(() => {
     track("view_search", {});
   }, []);
+
+  useEffect(() => {
+    if (viewMode === "map") {
+      track("open_map", {});
+    }
+  }, [viewMode]);
+
+  const handleViewModeChange = (mode: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (mode === "map") {
+      params.set("view", "map");
+      track("toggle_map_list", { mode: "map" });
+    } else {
+      params.delete("view");
+      track("toggle_map_list", { mode: "list" });
+    }
+    navigate(`?${params.toString()}`, { replace: true });
+  };
 
   useEffect(() => {
     track("apply_filters", {
@@ -109,13 +135,39 @@ export default function Dorms() {
     setRequestModalOpen(true);
   };
 
+  const handleDormCardClick = (dorm: Dorm) => {
+    setHighlightedDormId(dorm.id);
+    if (viewMode === "map") {
+      setSelectedDorm(dorm);
+    }
+  };
+
+  const handleMapViewDetails = (dorm: Dorm) => {
+    navigate(`/dorms/${dorm.id}`);
+  };
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-3xl md:text-4xl font-bold mb-2">Search Dorms</h1>
-        <p className="text-muted-foreground">
-          Found {filteredAndSortedDorms.length} dorm{filteredAndSortedDorms.length !== 1 ? "s" : ""}
-        </p>
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <h1 className="text-3xl md:text-4xl font-bold mb-2">Search Dorms</h1>
+          <p className="text-muted-foreground">
+            Found {filteredAndSortedDorms.length} dorm{filteredAndSortedDorms.length !== 1 ? "s" : ""}
+          </p>
+        </div>
+        
+        <Tabs value={viewMode} onValueChange={handleViewModeChange} className="w-fit">
+          <TabsList>
+            <TabsTrigger value="list" className="gap-2">
+              <List className="h-4 w-4" />
+              List
+            </TabsTrigger>
+            <TabsTrigger value="map" className="gap-2">
+              <MapIcon className="h-4 w-4" />
+              Map
+            </TabsTrigger>
+          </TabsList>
+        </Tabs>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8">
@@ -246,51 +298,75 @@ export default function Dorms() {
             </Button>
           </div>
 
-          {paginatedDorms.length === 0 ? (
-            <div className="text-center py-16">
-              <p className="text-xl text-muted-foreground mb-4">
-                No dorms match your filters.
-              </p>
-              <p className="text-muted-foreground mb-6">
-                Try widening the price or distance.
-              </p>
-              <Button onClick={handleReset}>Reset Filters</Button>
-            </div>
-          ) : (
-            <>
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-                {paginatedDorms.map(dorm => (
-                  <DormCard
-                    key={dorm.id}
-                    dorm={dorm}
-                    onRequestClick={handleRequestClick}
-                  />
-                ))}
+          {viewMode === "list" ? (
+            paginatedDorms.length === 0 ? (
+              <div className="text-center py-16">
+                <p className="text-xl text-muted-foreground mb-4">
+                  No dorms match your filters.
+                </p>
+                <p className="text-muted-foreground mb-6">
+                  Try widening the price or distance.
+                </p>
+                <Button onClick={handleReset}>Reset Filters</Button>
               </div>
+            ) : (
+              <>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                  {paginatedDorms.map(dorm => (
+                    <div key={dorm.id} onClick={() => handleDormCardClick(dorm)}>
+                      <DormCard
+                        dorm={dorm}
+                        onRequestClick={handleRequestClick}
+                      />
+                    </div>
+                  ))}
+                </div>
 
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="flex justify-center gap-2">
-                  <Button
-                    variant="outline"
-                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-                    disabled={currentPage === 1}
-                  >
-                    Previous
-                  </Button>
-                  <div className="flex items-center px-4">
-                    Page {currentPage} of {totalPages}
+                {/* Pagination */}
+                {totalPages > 1 && (
+                  <div className="flex justify-center gap-2">
+                    <Button
+                      variant="outline"
+                      onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                      disabled={currentPage === 1}
+                    >
+                      Previous
+                    </Button>
+                    <div className="flex items-center px-4">
+                      Page {currentPage} of {totalPages}
+                    </div>
+                    <Button
+                      variant="outline"
+                      onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                      disabled={currentPage === totalPages}
+                    >
+                      Next
+                    </Button>
                   </div>
-                  <Button
-                    variant="outline"
-                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-                    disabled={currentPage === totalPages}
-                  >
-                    Next
+                )}
+              </>
+            )
+          ) : (
+            <div className="h-[600px]">
+              <StaticMap
+                dorms={filteredAndSortedDorms}
+                onDormClick={(dorm) => setHighlightedDormId(dorm.id)}
+                onViewDetails={handleMapViewDetails}
+                onRequestClick={handleRequestClick}
+                highlightedDormId={highlightedDormId}
+                className="h-full"
+              />
+              {filteredAndSortedDorms.length === 0 && (
+                <div className="text-center py-8">
+                  <p className="text-muted-foreground">
+                    No dorms match your filters.
+                  </p>
+                  <Button onClick={handleReset} variant="outline" className="mt-4">
+                    Reset Filters
                   </Button>
                 </div>
               )}
-            </>
+            </div>
           )}
         </main>
       </div>

@@ -4,6 +4,7 @@ import { ArrowLeft, MapPin, CheckCircle2, Copy, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RequestModal } from "@/components/RequestModal";
+import { DemoCheckout } from "@/components/DemoCheckout";
 import { dorms, Dorm } from "@/data/dorms";
 import { track } from "@/lib/tracking";
 import { toast } from "sonner";
@@ -13,6 +14,7 @@ export default function DormDetail() {
   const navigate = useNavigate();
   const [dorm, setDorm] = useState<Dorm | null>(null);
   const [requestModalOpen, setRequestModalOpen] = useState(false);
+  const [checkoutOpen, setCheckoutOpen] = useState(false);
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
@@ -125,32 +127,44 @@ export default function DormDetail() {
               </div>
             </div>
 
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col gap-3">
               <Button
                 onClick={() => setRequestModalOpen(true)}
-                className="flex-1"
                 size="lg"
               >
                 Request
               </Button>
-              <Button
-                onClick={handleCopyLink}
-                variant="outline"
-                size="lg"
-                className="flex-1"
-              >
-                {copied ? (
-                  <>
-                    <Check className="mr-2" size={16} />
-                    Copied
-                  </>
-                ) : (
-                  <>
-                    <Copy className="mr-2" size={16} />
-                    Copy link
-                  </>
-                )}
-              </Button>
+              <div className="flex gap-3">
+                <Button
+                  onClick={() => {
+                    track("start_checkout_demo", { dormId: dorm.id, source: "detail_page" });
+                    setCheckoutOpen(true);
+                  }}
+                  variant="secondary"
+                  size="lg"
+                  className="flex-1"
+                >
+                  Pay deposit (demo)
+                </Button>
+                <Button
+                  onClick={handleCopyLink}
+                  variant="outline"
+                  size="lg"
+                  className="flex-1"
+                >
+                  {copied ? (
+                    <>
+                      <Check className="mr-2" size={16} />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="mr-2" size={16} />
+                      Copy link
+                    </>
+                  )}
+                </Button>
+              </div>
             </div>
           </div>
         </div>
@@ -160,6 +174,16 @@ export default function DormDetail() {
         dorm={dorm}
         open={requestModalOpen}
         onClose={() => setRequestModalOpen(false)}
+      />
+
+      <DemoCheckout
+        open={checkoutOpen}
+        onClose={() => setCheckoutOpen(false)}
+        dorm={dorm}
+        onSuccess={() => {
+          setCheckoutOpen(false);
+          toast.success("Demo payment successful!");
+        }}
       />
     </>
   );
