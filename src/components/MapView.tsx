@@ -54,55 +54,51 @@ function MapController({ dorms, selectedDormId, center }: { dorms: Dorm[], selec
   return null;
 }
 
-function MapContent({ dorms, selectedDormId, onMarkerClick, center }: { dorms: Dorm[], selectedDormId?: string, onMarkerClick?: (dormId: string) => void, center?: [number, number] }) {
-  return (
-    <>
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        minZoom={10}
-        maxZoom={18}
-      />
-      {dorms.map((dorm) => (
-        <Marker
-          key={dorm.id}
-          position={[dorm.lat, dorm.lng]}
-          eventHandlers={{
-            click: () => onMarkerClick?.(dorm.id),
-          }}
-        >
-          <Popup>
-            <div className="text-sm">
-              <h3 className="font-semibold mb-1">{dorm.name}</h3>
-              <p className="text-muted-foreground text-xs mb-1">{dorm.university}</p>
-              <p className="font-bold text-primary">{dorm.priceKzt.toLocaleString()} ₸/mo</p>
-              <p className="text-xs text-muted-foreground">{dorm.distanceKm} km from center</p>
-            </div>
-          </Popup>
-        </Marker>
-      ))}
-      <MapController dorms={dorms} selectedDormId={selectedDormId} center={center} />
-    </>
-  );
-}
-
 export function MapView({ dorms, selectedDormId, onMarkerClick, height = "400px", center, zoom = 12 }: MapViewProps) {
   const defaultCenter: [number, number] = center || [43.2220, 76.9250];
+
+  if (dorms.length === 0) {
+    return (
+      <div style={{ height }} className="rounded-lg overflow-hidden border border-border flex items-center justify-center bg-muted">
+        <p className="text-muted-foreground">No locations to display</p>
+      </div>
+    );
+  }
 
   return (
     <div style={{ height }} className="rounded-lg overflow-hidden border border-border">
       <MapContainer
+        key={`map-${dorms.length}`}
         center={defaultCenter}
         zoom={zoom}
         style={{ height: "100%", width: "100%" }}
         scrollWheelZoom={true}
       >
-        <MapContent 
-          dorms={dorms} 
-          selectedDormId={selectedDormId} 
-          onMarkerClick={onMarkerClick}
-          center={center}
+        <TileLayer
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          minZoom={10}
+          maxZoom={18}
         />
+        {dorms.map((dorm) => (
+          <Marker
+            key={dorm.id}
+            position={[dorm.lat, dorm.lng]}
+            eventHandlers={{
+              click: () => onMarkerClick?.(dorm.id),
+            }}
+          >
+            <Popup>
+              <div className="text-sm">
+                <h3 className="font-semibold mb-1">{dorm.name}</h3>
+                <p className="text-muted-foreground text-xs mb-1">{dorm.university}</p>
+                <p className="font-bold text-primary">{dorm.priceKzt.toLocaleString()} ₸/mo</p>
+                <p className="text-xs text-muted-foreground">{dorm.distanceKm} km from center</p>
+              </div>
+            </Popup>
+          </Marker>
+        ))}
+        <MapController dorms={dorms} selectedDormId={selectedDormId} center={center} />
       </MapContainer>
     </div>
   );
