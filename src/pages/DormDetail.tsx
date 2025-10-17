@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import { ArrowLeft, MapPin, CheckCircle2, Copy, Check } from "lucide-react";
+import { ArrowLeft, MapPin, CheckCircle2, Copy, Check, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { RequestModal } from "@/components/RequestModal";
+import { MapView } from "@/components/MapView";
 import { dorms, Dorm } from "@/data/dorms";
 import { track } from "@/lib/tracking";
 import { toast } from "sonner";
@@ -33,6 +34,13 @@ export default function DormDetail() {
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleGetDirections = () => {
+    if (dorm) {
+      const url = `https://www.google.com/maps?q=${dorm.lat},${dorm.lng}`;
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
+
   if (!dorm) {
     return (
       <div className="container mx-auto px-4 py-8">
@@ -54,7 +62,7 @@ export default function DormDetail() {
         <div className="grid lg:grid-cols-2 gap-8">
           {/* Gallery */}
           <div>
-            <div className="space-y-4">
+            <div className="space-y-4 mb-6">
               {dorm.photos.map((photo, index) => (
                 <div key={index} className="aspect-video bg-muted rounded-lg flex items-center justify-center border border-border">
                   <div className="text-center text-muted-foreground">
@@ -63,6 +71,26 @@ export default function DormDetail() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Map */}
+            <div className="mb-4">
+              <h3 className="font-semibold mb-3">Location</h3>
+              <MapView
+                dorms={[dorm]}
+                center={[dorm.lat, dorm.lng]}
+                height="300px"
+                zoom={14}
+              />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleGetDirections}
+                className="mt-2 w-full"
+              >
+                <ExternalLink size={14} className="mr-2" />
+                Get directions
+              </Button>
             </div>
           </div>
 

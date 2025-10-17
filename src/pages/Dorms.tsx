@@ -13,14 +13,20 @@ import {
 } from "@/components/ui/select";
 import { DormCard } from "@/components/DormCard";
 import { RequestModal } from "@/components/RequestModal";
+import { MapView } from "@/components/MapView";
 import { dorms, Dorm } from "@/data/dorms";
 import { track } from "@/lib/tracking";
-import { SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal, Map, Eye, EyeOff } from "lucide-react";
 
 export default function Dorms() {
   const [selectedDorm, setSelectedDorm] = useState<Dorm | null>(null);
   const [requestModalOpen, setRequestModalOpen] = useState(false);
   const [filtersVisible, setFiltersVisible] = useState(true);
+  const [mapVisible, setMapVisible] = useState(() => {
+    const saved = localStorage.getItem("mapVisible");
+    return saved !== null ? saved === "true" : true;
+  });
+  const [highlightedDormId, setHighlightedDormId] = useState<string | null>(null);
 
   // Filter states
   const [selectedUniversities, setSelectedUniversities] = useState<string[]>([]);
@@ -49,6 +55,10 @@ export default function Dorms() {
       sortBy
     });
   }, [selectedUniversities, priceRange, genderPolicy, maxDistance, verifiedOnly, sortBy]);
+
+  useEffect(() => {
+    localStorage.setItem("mapVisible", mapVisible.toString());
+  }, [mapVisible]);
 
   const filteredAndSortedDorms = useMemo(() => {
     let result = dorms.filter(dorm => {
@@ -107,6 +117,18 @@ export default function Dorms() {
   const handleRequestClick = (dorm: Dorm) => {
     setSelectedDorm(dorm);
     setRequestModalOpen(true);
+  };
+
+  const handleMarkerClick = (dormId: string) => {
+    setHighlightedDormId(dormId);
+    const element = document.getElementById(`dorm-card-${dormId}`);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+  };
+
+  const handleCardClick = (dormId: string) => {
+    setHighlightedDormId(dormId);
   };
 
   return (
@@ -246,6 +268,29 @@ export default function Dorms() {
             </Button>
           </div>
 
+          {/* Map Toggle and View */}
+          {filteredAndSortedDorms.length > 0 && (
+            <div className="mb-6">
+              <Button
+                variant="outline"
+                onClick={() => setMapVisible(!mapVisible)}
+                className="mb-4 w-full md:w-auto"
+              >
+                {mapVisible ? <EyeOff size={16} className="mr-2" /> : <Eye size={16} className="mr-2" />}
+                {mapVisible ? "Hide Map" : "Show Map"}
+              </Button>
+
+              {mapVisible && (
+                <MapView
+                  dorms={filteredAndSortedDorms}
+                  selectedDormId={highlightedDormId || undefined}
+                  onMarkerClick={handleMarkerClick}
+                  height="400px"
+                />
+              )}
+            </div>
+          )}
+
           {paginatedDorms.length === 0 ? (
             <div className="text-center py-16">
               <p className="text-xl text-muted-foreground mb-4">
@@ -260,11 +305,17 @@ export default function Dorms() {
             <>
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                 {paginatedDorms.map(dorm => (
-                  <DormCard
+                  <div
                     key={dorm.id}
-                    dorm={dorm}
-                    onRequestClick={handleRequestClick}
-                  />
+                    id={`dorm-card-${dorm.id}`}
+                    onClick={() => handleCardClick(dorm.id)}
+                    className={highlightedDormId === dorm.id ? "ring-2 ring-primary rounded-lg" : ""}
+                  >
+                    <DormCard
+                      dorm={dorm}
+                      onRequestClick={handleRequestClick}
+                    />
+                  </div>
                 ))}
               </div>
 

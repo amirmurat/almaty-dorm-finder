@@ -10,6 +10,8 @@ export interface Dorm {
   distanceKm: number;
   verified: boolean;
   photos: string[];
+  lat: number;
+  lng: number;
 }
 
 export const dorms: Dorm[] = [
@@ -24,7 +26,9 @@ export const dorms: Dorm[] = [
     amenities: ["Wi-Fi", "Laundry", "Study room", "24/7 security"],
     distanceKm: 1.2,
     verified: true,
-    photos: ["placeholder:room1", "placeholder:room2"]
+    photos: ["placeholder:room1", "placeholder:room2"],
+    lat: 43.2225,
+    lng: 76.9510
   },
   {
     id: "satbayev-main-1",
@@ -37,7 +41,9 @@ export const dorms: Dorm[] = [
     amenities: ["Wi-Fi", "Kitchen", "Gym"],
     distanceKm: 2.4,
     verified: true,
-    photos: ["placeholder:room1"]
+    photos: ["placeholder:room1"],
+    lat: 43.2389,
+    lng: 76.9185
   },
   {
     id: "aitu-central",
@@ -50,7 +56,9 @@ export const dorms: Dorm[] = [
     amenities: ["Wi-Fi", "Study rooms", "Camera surveillance"],
     distanceKm: 3.1,
     verified: false,
-    photos: ["placeholder:room1", "placeholder:room3"]
+    photos: ["placeholder:room1", "placeholder:room3"],
+    lat: 43.2421,
+    lng: 76.9050
   },
   {
     id: "kaznu-south-2",
@@ -63,7 +71,9 @@ export const dorms: Dorm[] = [
     amenities: ["Wi-Fi", "Canteen"],
     distanceKm: 1.8,
     verified: false,
-    photos: ["placeholder:room2"]
+    photos: ["placeholder:room2"],
+    lat: 43.2200,
+    lng: 76.9480
   },
   {
     id: "satbayev-east",
@@ -76,6 +86,8 @@ export const dorms: Dorm[] = [
     amenities: ["Wi-Fi", "Kitchenette", "Study area"],
     distanceKm: 4.3,
     verified: true,
-    photos: ["placeholder:room2", "placeholder:room3"]
+    photos: ["placeholder:room2", "placeholder:room3"],
+    lat: 43.2500,
+    lng: 76.9390
   }
 ];
