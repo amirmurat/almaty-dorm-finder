@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup, useMap } from "react-leaflet";
 import { Dorm } from "@/data/dorms";
 import L from "leaflet";
@@ -7,12 +7,16 @@ import "leaflet/dist/leaflet.css";
 // Fix default marker icon issue with webpack
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import icon2x from "leaflet/dist/images/marker-icon-2x.png";
 
 const DefaultIcon = L.icon({
   iconUrl: icon,
+  iconRetinaUrl: icon2x,
   shadowUrl: iconShadow,
   iconSize: [25, 41],
   iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
@@ -50,6 +54,38 @@ function MapController({ dorms, selectedDormId, center }: { dorms: Dorm[], selec
   return null;
 }
 
+function MapContent({ dorms, selectedDormId, onMarkerClick, center }: { dorms: Dorm[], selectedDormId?: string, onMarkerClick?: (dormId: string) => void, center?: [number, number] }) {
+  return (
+    <>
+      <TileLayer
+        attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        minZoom={10}
+        maxZoom={18}
+      />
+      {dorms.map((dorm) => (
+        <Marker
+          key={dorm.id}
+          position={[dorm.lat, dorm.lng]}
+          eventHandlers={{
+            click: () => onMarkerClick?.(dorm.id),
+          }}
+        >
+          <Popup>
+            <div className="text-sm">
+              <h3 className="font-semibold mb-1">{dorm.name}</h3>
+              <p className="text-muted-foreground text-xs mb-1">{dorm.university}</p>
+              <p className="font-bold text-primary">{dorm.priceKzt.toLocaleString()} ₸/mo</p>
+              <p className="text-xs text-muted-foreground">{dorm.distanceKm} km from center</p>
+            </div>
+          </Popup>
+        </Marker>
+      ))}
+      <MapController dorms={dorms} selectedDormId={selectedDormId} center={center} />
+    </>
+  );
+}
+
 export function MapView({ dorms, selectedDormId, onMarkerClick, height = "400px", center, zoom = 12 }: MapViewProps) {
   const defaultCenter: [number, number] = center || [43.2220, 76.9250];
 
@@ -61,31 +97,12 @@ export function MapView({ dorms, selectedDormId, onMarkerClick, height = "400px"
         style={{ height: "100%", width: "100%" }}
         scrollWheelZoom={true}
       >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          minZoom={10}
-          maxZoom={18}
+        <MapContent 
+          dorms={dorms} 
+          selectedDormId={selectedDormId} 
+          onMarkerClick={onMarkerClick}
+          center={center}
         />
-        {dorms.map((dorm) => (
-          <Marker
-            key={dorm.id}
-            position={[dorm.lat, dorm.lng]}
-            eventHandlers={{
-              click: () => onMarkerClick?.(dorm.id),
-            }}
-          >
-            <Popup>
-              <div className="text-sm">
-                <h3 className="font-semibold mb-1">{dorm.name}</h3>
-                <p className="text-muted-foreground text-xs mb-1">{dorm.university}</p>
-                <p className="font-bold text-primary">{dorm.priceKzt.toLocaleString()} ₸/mo</p>
-                <p className="text-xs text-muted-foreground">{dorm.distanceKm} km from center</p>
-              </div>
-            </Popup>
-          </Marker>
-        ))}
-        <MapController dorms={dorms} selectedDormId={selectedDormId} center={center} />
       </MapContainer>
     </div>
   );
