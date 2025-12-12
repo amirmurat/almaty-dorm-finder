@@ -100,13 +100,35 @@ export async function register(
   phone?: string
 ): Promise<{ success: boolean; error?: string; user?: User }> {
   try {
-    // Check if email already exists
+    // Пробуем использовать API
+    try {
+      const { registerUser } = await import('./api');
+      const apiUser = await registerUser({ name, email, password, phone });
+      const user: User = {
+        id: apiUser.id,
+        name: apiUser.name,
+        email: apiUser.email,
+        phone: apiUser.phone,
+        salt: '', // Не храним на клиенте
+        passwordHash: '', // Не храним на клиенте
+        createdAt: new Date().toISOString()
+      };
+      return { success: true, user };
+    } catch (apiError: any) {
+      // Fallback на localStorage если API недоступен
+      if (apiError.message?.includes('fetch')) {
+        console.warn('API недоступен, используем localStorage');
+      } else {
+        return { success: false, error: apiError.message || "Ошибка регистрации" };
+      }
+    }
+
+    // Fallback: localStorage
     const users = getUsers();
     if (users.some(u => u.email.toLowerCase() === email.toLowerCase())) {
       return { success: false, error: "Пользователь с таким email уже существует" };
     }
 
-    // Generate salt and hash password
     const salt = generateSalt();
     const passwordHash = await hashPassword(password, salt);
 
@@ -134,6 +156,30 @@ export async function login(
   password: string
 ): Promise<{ success: boolean; error?: string; user?: User }> {
   try {
+    // Пробуем использовать API
+    try {
+      const { loginUser } = await import('./api');
+      const result = await loginUser(email, password);
+      const user: User = {
+        id: result.user.id,
+        name: result.user.name,
+        email: result.user.email,
+        phone: result.user.phone,
+        salt: '',
+        passwordHash: '',
+        createdAt: result.user.createdAt || new Date().toISOString()
+      };
+      return { success: true, user };
+    } catch (apiError: any) {
+      // Fallback на localStorage если API недоступен
+      if (apiError.message?.includes('fetch')) {
+        console.warn('API недоступен, используем localStorage');
+      } else {
+        return { success: false, error: apiError.message || "Неверный email или пароль" };
+      }
+    }
+
+    // Fallback: localStorage
     const users = getUsers();
     const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
 
@@ -141,7 +187,6 @@ export async function login(
       return { success: false, error: "Неверный email или пароль" };
     }
 
-    // Verify password
     const passwordHash = await hashPassword(password, user.salt);
     if (passwordHash !== user.passwordHash) {
       return { success: false, error: "Неверный email или пароль" };

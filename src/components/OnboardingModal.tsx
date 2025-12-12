@@ -206,14 +206,18 @@ export function OnboardingModal({ open, onClose, isEdit = false }: OnboardingMod
 
   const progress = (step / 3) * 100;
 
-  const universities = [
-    "KazNU",
-    "Satbayev University",
+  // Получаем список университетов из реальных данных
+  const universities = Array.from(new Set([
+    "КазНУ им. аль-Фараби",
+    "КазНИТУ им. Сатпаева",
     "AITU",
-    "AlmaU",
-    "KBTU",
+    "КазНПУ им. Абая",
+    "КБТУ",
+    "КазУМОиМЯ им. Абылай хана",
+    "КазНАУ",
+    "Частное",
     "Другое"
-  ];
+  ]));
 
   const moveInOptions = [
     "Октябрь 2025",

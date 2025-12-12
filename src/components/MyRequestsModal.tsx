@@ -37,16 +37,16 @@ export function MyRequestsModal({ open, onClose }: MyRequestsModalProps) {
     }
   }, [open]);
 
-  const loadRequests = () => {
-    const data = getDormRequests();
+  const loadRequests = async () => {
+    const data = await getDormRequests();
     setRequests(data);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (!deleteId) return;
 
     try {
-      deleteDormRequest(deleteId);
+      await deleteDormRequest(deleteId);
       track("delete_request", { requestId: deleteId });
       toast.success("Request deleted");
       loadRequests();

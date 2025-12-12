@@ -15,8 +15,9 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { DormCard } from "@/components/DormCard";
 import { RequestModal } from "@/components/RequestModal";
-import { StaticMap } from "@/components/StaticMap";
-import { dorms, Dorm } from "@/data/dorms";
+import { MapWrapper } from "@/components/MapWrapper";
+import { dorms as localDorms, Dorm } from "@/data/dorms";
+import { getDorms } from "@/lib/api";
 import { track } from "@/lib/tracking";
 import { SlidersHorizontal, List, Map as MapIcon } from "lucide-react";
 
@@ -40,6 +41,22 @@ export default function Dorms() {
 
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
+  
+  const [dorms, setDorms] = useState<Dorm[]>(localDorms);
+  
+  // Загружаем данные с сервера при монтировании
+  useEffect(() => {
+    getDorms()
+      .then((serverDorms: Dorm[]) => {
+        if (serverDorms && serverDorms.length > 0) {
+          setDorms(serverDorms);
+        }
+      })
+      .catch(() => {
+        // Используем локальные данные если сервер недоступен
+        console.warn('Server unavailable, using local dorms data');
+      });
+  }, []);
 
   const universities = Array.from(new Set(dorms.map(d => d.university)));
 
@@ -198,7 +215,7 @@ export default function Dorms() {
                 <SlidersHorizontal size={20} />
                 Фильтры
               </h2>
-              <Button variant="ghost" size="sm" onClick={handleReset}>
+              <Button variant="ghost" size="sm" onClick={handleReset} className="min-h-[36px]">
                 Сбросить
               </Button>
             </div>
@@ -209,13 +226,18 @@ export default function Dorms() {
                 <Label className="mb-3 block">Университет</Label>
                 <div className="space-y-2">
                   {universities.map(uni => (
-                    <div key={uni} className="flex items-center space-x-2">
+                    <div key={uni} className="flex items-center space-x-2 group">
                       <Checkbox
                         id={uni}
                         checked={selectedUniversities.includes(uni)}
                         onCheckedChange={() => handleUniversityToggle(uni)}
+                        className="cursor-pointer"
                       />
-                      <label htmlFor={uni} className="text-sm cursor-pointer">
+                      <label 
+                        htmlFor={uni} 
+                        className="text-sm cursor-pointer flex-1 py-2 px-2 -ml-2 rounded hover:bg-accent transition-colors"
+                        style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+                      >
                         {uni}
                       </label>
                     </div>
@@ -248,7 +270,7 @@ export default function Dorms() {
                     { value: "female", label: "Женские" },
                     { value: "mixed", label: "Смешанные" }
                   ].map(policy => (
-                    <div key={policy.value} className="flex items-center space-x-2">
+                    <div key={policy.value} className="flex items-center space-x-2 group">
                       <input
                         type="radio"
                         id={policy.value}
@@ -257,7 +279,11 @@ export default function Dorms() {
                         onChange={() => setGenderPolicy(policy.value)}
                         className="cursor-pointer"
                       />
-                      <label htmlFor={policy.value} className="text-sm cursor-pointer">
+                      <label 
+                        htmlFor={policy.value} 
+                        className="text-sm cursor-pointer flex-1 py-2 px-2 -ml-2 rounded hover:bg-accent transition-colors"
+                        style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+                      >
                         {policy.label}
                       </label>
                     </div>
@@ -280,13 +306,18 @@ export default function Dorms() {
               </div>
 
               {/* Verified Only */}
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2 group">
                 <Checkbox
                   id="verified"
                   checked={verifiedOnly}
                   onCheckedChange={(checked) => setVerifiedOnly(checked as boolean)}
+                  className="cursor-pointer"
                 />
-                <label htmlFor="verified" className="text-sm cursor-pointer">
+                <label 
+                  htmlFor="verified" 
+                  className="text-sm cursor-pointer flex-1 py-2 px-2 -ml-2 rounded hover:bg-accent transition-colors"
+                  style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
+                >
                   Только проверенные
                 </label>
               </div>
@@ -315,7 +346,7 @@ export default function Dorms() {
             <Button
               variant="outline"
               onClick={() => setFiltersVisible(!filtersVisible)}
-              className="w-full"
+              className="w-full min-h-[44px]"
             >
               <SlidersHorizontal size={16} className="mr-2" />
               {filtersVisible ? "Скрыть" : "Показать"} фильтры
@@ -337,32 +368,33 @@ export default function Dorms() {
               <>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                   {paginatedDorms.map(dorm => (
-                    <div key={dorm.id} onClick={() => handleDormCardClick(dorm)}>
-                      <DormCard
-                        dorm={dorm}
-                        onRequestClick={handleRequestClick}
-                      />
-                    </div>
+                    <DormCard
+                      key={dorm.id}
+                      dorm={dorm}
+                      onRequestClick={handleRequestClick}
+                    />
                   ))}
                 </div>
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="flex justify-center gap-2">
+                  <div className="flex justify-center gap-2 items-center flex-wrap">
                     <Button
                       variant="outline"
                       onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
                       disabled={currentPage === 1}
+                      className="min-h-[44px] min-w-[44px]"
                     >
                       Назад
                     </Button>
-                    <div className="flex items-center px-4">
+                    <div className="flex items-center px-4 py-2">
                       Страница {currentPage} из {totalPages}
                     </div>
                     <Button
                       variant="outline"
                       onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                       disabled={currentPage === totalPages}
+                      className="min-h-[44px] min-w-[44px]"
                     >
                       Вперед
                     </Button>
@@ -372,7 +404,7 @@ export default function Dorms() {
             )
           ) : (
             <div className="h-[600px]">
-              <StaticMap
+              <MapWrapper
                 dorms={filteredAndSortedDorms}
                 onDormClick={(dorm) => setHighlightedDormId(dorm.id)}
                 onViewDetails={handleMapViewDetails}

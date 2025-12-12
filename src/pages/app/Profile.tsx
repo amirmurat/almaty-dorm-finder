@@ -36,9 +36,9 @@ export default function Profile() {
     loadRequests();
   }, [isAuthenticated, navigate]);
 
-  const loadRequests = () => {
+  const loadRequests = async () => {
     if (!user) return;
-    const allRequests = getDormRequests();
+    const allRequests = await getDormRequests();
     // Filter requests by user if userId was saved
     // For now, show all requests since we didn't add userId to old requests
     setRequests(allRequests);
@@ -66,9 +66,9 @@ export default function Profile() {
     }
   };
 
-  const handleDeleteRequest = (id: string) => {
+  const handleDeleteRequest = async (id: string) => {
     try {
-      deleteDormRequest(id);
+      await deleteDormRequest(id);
       track("delete_request", { requestId: id });
       toast.success("Заявка удалена");
       loadRequests();

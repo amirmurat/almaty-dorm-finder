@@ -71,7 +71,7 @@ export default function Home() {
           <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto">
             Прозрачные цены, удобства и доступность — всё в одном месте.
           </p>
-          <Button size="lg" onClick={handleSearchClick} className="text-lg px-8">
+          <Button size="lg" onClick={handleSearchClick} className="text-lg px-8 min-h-[48px]">
             <Search className="mr-2" size={20} />
             Искать общежития
           </Button>
@@ -145,7 +145,7 @@ export default function Home() {
           </div>
 
           <div className="text-center">
-            <Button size="lg" onClick={handleViewAllDorms}>
+            <Button size="lg" onClick={handleViewAllDorms} className="min-h-[48px]">
               Смотреть все общежития и фильтры
             </Button>
           </div>

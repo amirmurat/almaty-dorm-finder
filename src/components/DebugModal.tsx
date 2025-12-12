@@ -30,11 +30,11 @@ export function DebugModal({ open, onClose }: DebugModalProps) {
     }
   }, [open]);
 
-  const loadAllData = () => {
+  const loadAllData = async () => {
     setEvents(getEventLog());
     setOnboardingData(getOnboardingProfile());
-    setRequests(getDormRequests());
-    setPayments(getDemoPayments());
+    setRequests(await getDormRequests());
+    setPayments(await getDemoPayments());
     // Don't show passwords
     const allUsers = getUsers().map(u => ({
       id: u.id,

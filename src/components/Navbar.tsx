@@ -40,37 +40,37 @@ export function Navbar({ onMyRequestsClick }: NavbarProps) {
           <div className="hidden md:flex items-center space-x-6">
             <button
               onClick={() => scrollToSection("hero")}
-              className="text-foreground hover:text-primary transition-colors"
+              className="text-foreground hover:text-primary transition-colors px-3 py-2 rounded-md hover:bg-accent"
             >
               Главная
             </button>
             <button
               onClick={() => scrollToSection("how")}
-              className="text-foreground hover:text-primary transition-colors"
+              className="text-foreground hover:text-primary transition-colors px-3 py-2 rounded-md hover:bg-accent"
             >
               Как это работает
             </button>
             <button
               onClick={() => scrollToSection("search")}
-              className="text-foreground hover:text-primary transition-colors"
+              className="text-foreground hover:text-primary transition-colors px-3 py-2 rounded-md hover:bg-accent"
             >
               Поиск
             </button>
             <Link
               to="/dorms?view=map"
-              className="text-foreground hover:text-primary transition-colors"
+              className="text-foreground hover:text-primary transition-colors px-3 py-2 rounded-md hover:bg-accent"
             >
               Карта
             </Link>
             <button
               onClick={() => scrollToSection("faq")}
-              className="text-foreground hover:text-primary transition-colors"
+              className="text-foreground hover:text-primary transition-colors px-3 py-2 rounded-md hover:bg-accent"
             >
               FAQ
             </button>
             <button
               onClick={() => scrollToSection("contact")}
-              className="text-foreground hover:text-primary transition-colors"
+              className="text-foreground hover:text-primary transition-colors px-3 py-2 rounded-md hover:bg-accent"
             >
               Контакты
             </button>
@@ -103,8 +103,9 @@ export function Navbar({ onMyRequestsClick }: NavbarProps) {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2"
+            className="md:hidden p-2 rounded-md hover:bg-accent transition-colors"
             aria-label="Toggle menu"
+            style={{ minWidth: '44px', minHeight: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
           >
             {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -112,41 +113,47 @@ export function Navbar({ onMyRequestsClick }: NavbarProps) {
 
           {/* Mobile Navigation */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 space-y-3 border-t border-border">
+          <div className="md:hidden py-4 space-y-1 border-t border-border">
             <button
               onClick={() => scrollToSection("hero")}
-              className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"
+              className="block w-full text-left py-3 px-4 text-foreground hover:text-primary hover:bg-accent transition-colors rounded-md"
+              style={{ minHeight: '44px' }}
             >
               Главная
             </button>
             <button
               onClick={() => scrollToSection("how")}
-              className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"
+              className="block w-full text-left py-3 px-4 text-foreground hover:text-primary hover:bg-accent transition-colors rounded-md"
+              style={{ minHeight: '44px' }}
             >
               Как это работает
             </button>
             <button
               onClick={() => scrollToSection("search")}
-              className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"
+              className="block w-full text-left py-3 px-4 text-foreground hover:text-primary hover:bg-accent transition-colors rounded-md"
+              style={{ minHeight: '44px' }}
             >
               Поиск
             </button>
             <Link
               to="/dorms?view=map"
-              className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"
+              className="block w-full text-left py-3 px-4 text-foreground hover:text-primary hover:bg-accent transition-colors rounded-md"
               onClick={() => setMobileMenuOpen(false)}
+              style={{ minHeight: '44px', display: 'flex', alignItems: 'center' }}
             >
               Карта
             </Link>
             <button
               onClick={() => scrollToSection("faq")}
-              className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"
+              className="block w-full text-left py-3 px-4 text-foreground hover:text-primary hover:bg-accent transition-colors rounded-md"
+              style={{ minHeight: '44px' }}
             >
               FAQ
             </button>
             <button
               onClick={() => scrollToSection("contact")}
-              className="block w-full text-left py-2 text-foreground hover:text-primary transition-colors"
+              className="block w-full text-left py-3 px-4 text-foreground hover:text-primary hover:bg-accent transition-colors rounded-md"
+              style={{ minHeight: '44px' }}
             >
               Контакты
             </button>

@@ -114,7 +114,7 @@ export function DemoCheckout({ open, onClose, dorm, requestId, onSuccess }: Demo
       track("mock_pay_decline", { dormId: dorm.id, requestId });
     } else {
       // Save payment (without card details)
-      const newPayment = saveDemoPayment({
+      const newPayment = await saveDemoPayment({
         requestId,
         dormId: dorm.id,
         dormName: dorm.name,
@@ -124,11 +124,11 @@ export function DemoCheckout({ open, onClose, dorm, requestId, onSuccess }: Demo
 
       // Update request if exists
       if (requestId) {
-        const requests = getDormRequests();
+        const requests = await getDormRequests();
         const request = requests.find(r => r.id === requestId);
         if (request) {
           request.demoPaymentId = newPayment.id;
-          saveDormRequest(request);
+          await saveDormRequest(request);
         }
       }
 

@@ -58,11 +58,41 @@ export default function DormDetail() {
           <div>
             <div className="space-y-4">
               {dorm.photos.map((photo, index) => (
-                <div key={index} className="aspect-video bg-muted rounded-lg flex items-center justify-center border border-border">
-                  <div className="text-center text-muted-foreground">
-                    <div className="text-5xl mb-2">🏠</div>
-                    <div className="text-sm">{photo}</div>
-                  </div>
+                <div key={index} className="aspect-video bg-muted rounded-lg overflow-hidden border border-border relative">
+                  {photo && photo.startsWith('http') ? (
+                    <>
+                      <img 
+                        src={photo} 
+                        alt={`${dorm.name} - фото ${index + 1}`}
+                        className="w-full h-full object-cover"
+                        loading={index === 0 ? "eager" : "lazy"}
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          const fallback = target.parentElement?.querySelector('.image-fallback') as HTMLElement;
+                          if (fallback) {
+                            fallback.style.display = 'flex';
+                          }
+                        }}
+                      />
+                      <div 
+                        className="image-fallback absolute inset-0 flex items-center justify-center text-muted-foreground bg-muted"
+                        style={{ display: 'none' }}
+                      >
+                        <div className="text-center">
+                          <div className="text-5xl mb-2">🏠</div>
+                          <div className="text-sm">Фото недоступно</div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground">
+                      <div className="text-center">
+                        <div className="text-5xl mb-2">🏠</div>
+                        <div className="text-sm">{photo || 'Фото'}</div>
+                      </div>
+                    </div>
+                  )}
                 </div>
               ))}
             </div>

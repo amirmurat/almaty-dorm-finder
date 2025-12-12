@@ -116,7 +116,7 @@ export function RequestModal({ dorm, open, onClose }: RequestModalProps) {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!dorm) return;
@@ -129,7 +129,7 @@ export function RequestModal({ dorm, open, onClose }: RequestModalProps) {
     }
 
     try {
-      const request = saveDormRequest({
+      const request = await saveDormRequest({
         dormId: dorm.id,
         dormName: dorm.name,
         fullName: formData.fullName,
@@ -187,10 +187,15 @@ export function RequestModal({ dorm, open, onClose }: RequestModalProps) {
                     <SelectValue placeholder="Select university" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="KazNU">KazNU</SelectItem>
+                    <SelectItem value="КазНУ им. аль-Фараби">КазНУ им. аль-Фараби</SelectItem>
+                    <SelectItem value="КазНИТУ им. Сатпаева">КазНИТУ им. Сатпаева</SelectItem>
                     <SelectItem value="AITU">AITU</SelectItem>
-                    <SelectItem value="Satbayev University">Satbayev University</SelectItem>
-                    <SelectItem value="Other">Other</SelectItem>
+                    <SelectItem value="КазНПУ им. Абая">КазНПУ им. Абая</SelectItem>
+                    <SelectItem value="КБТУ">КБТУ</SelectItem>
+                    <SelectItem value="КазУМОиМЯ им. Абылай хана">КазУМОиМЯ им. Абылай хана</SelectItem>
+                    <SelectItem value="КазНАУ">КазНАУ</SelectItem>
+                    <SelectItem value="Частное">Частное</SelectItem>
+                    <SelectItem value="Other">Другое</SelectItem>
                   </SelectContent>
                 </Select>
                 {errors.university && <p className="text-xs text-destructive mt-1">{errors.university}</p>}
